@@ -65,7 +65,7 @@ function App() {
       )
     );
   };
-
+  // Toggle reminder using db.json but ran into a bug
   // const toggleReminder = async (id) => {
   //   const taskToToggle = await fetchTask(id);
   //   console.log({ taskToToggle });
