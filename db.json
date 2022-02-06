@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "text": "Anniversary ",
+      "day": "August @2:00pm",
+      "reminder": true,
+      "id": 2
+    },
+    {
+      "text": "Birthday Party for G",
+      "day": "April 2nd @3:00pm",
+      "reminder": false,
+      "id": 3
+    },
+    {
+      "text": "Study React ",
+      "day": "Everyday @10am",
+      "reminder": false,
+      "id": 4
+    }
+  ]
+}

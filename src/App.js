@@ -1,45 +1,59 @@
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [showAddTask, setshowAddTask] = useState(false);
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      text: "Gym",
-      day: "Jan 31 at 3:30pm",
-      reminder: true,
-    },
-    {
-      id: 2,
-      text: "Shower",
-      day: "Jan 31 at 3:30pm",
-      reminder: false,
-    },
-    {
-      id: 3,
-      text: "Coding",
-      day: "Jan 31 at 3:30pm",
-      reminder: true,
-    },
-    {
-      id: 4,
-      text: "Lunch",
-      day: "Jan 31 at 3:30pm",
-      reminder: false,
-    },
-  ]);
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const getTasks = async () => {
+      const tasksFromServer = await fetchTasks();
+      setTasks(tasksFromServer);
+    };
+    getTasks();
+  }, []);
+  //Fetch Tasks
+  const fetchTasks = async () => {
+    const res = await fetch("http://localhost:3001/tasks");
+    const data = await res.json();
+
+    return data;
+  };
+  //Fetch Task
+  // const fetchTask = async (id) => {
+  //   const res = await fetch(`http://localhost:3001/tasks/${id}`);
+  //   const data = await res.json();
+
+  //   return data;
+  // };
 
   //Add Task
-  const addTask = (task) => {
-    const id = Math.floor(Math.random() * 10000) + 1;
-    const newTask = { id, ...task };
-    setTasks([...tasks, newTask]);
+  const addTask = async (task) => {
+    const res = await fetch("http://localhost:3001/tasks", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
+
+    const data = await res.json();
+
+    setTasks([...tasks, data]);
+
+    // when not using backend - use this to create id
+    // const id = Math.floor(Math.random() * 10000) + 1;
+    // const newTask = { id, ...task };
+    // setTasks([...tasks, newTask]);
   };
   //delete task
-  const deleteTask = (id) => {
+  const deleteTask = async (id) => {
+    await fetch(`http://localhost:3001/tasks/${id}`, {
+      method: "DELETE",
+    });
+
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
@@ -51,6 +65,32 @@ function App() {
       )
     );
   };
+
+  // const toggleReminder = async (id) => {
+  //   const taskToToggle = await fetchTask(id);
+  //   console.log({ taskToToggle });
+  //   const updTask = {
+  //     ...taskToToggle,
+  //     reminder: !taskToToggle.reminder,
+  //     foo: "bar",
+  //   };
+
+  //   const res = await fetch(`http://localhost:3001/tasks/${id}`, {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-type": "application.json",
+  //     },
+  //     body: JSON.stringify(updTask),
+  //   });
+
+  //   const data = await res.json();
+
+  //   setTasks(
+  //     tasks.map((task) =>
+  //       task.id === id ? { ...task, reminder: data.reminder } : task
+  //     )
+  //   );
+  // };
 
   return (
     <div className="container">
